@@ -16,7 +16,7 @@ let isShooting = false;
 
 const FPS = 60;
 const PLAYER_SPEED = 5;
-const keys = [];
+let keys = [];
 let lastRenderTime = 0;
 
 let enemy = new Enemy(board, player);
@@ -71,22 +71,41 @@ const movePlayer = () => {
   }
 
   if (keys['Space']) {
-    setTimeout(() => {isShooting = true}, 2000);
+    if (isShooting) return;
+
+    setTimeout(() => {
+      isShooting = true;
+      playerImg.style.border = '1px dashed red';
+    }, 2000);
     playerImg.src = pigShootSrc;
+
     setTimeout(() => {
       playerImg.src = pigStaySrc
       isShooting = false;
+      playerImg.style.border = '1px dashed green';
     }, 6000)
   }
 };
 
 const checkKillEnemy = () => {
-  if (!isShooting) return;
+  //* player die
+  if (!isShooting && playerEnemyCollision()) {
+    createNewEnemy();
+    alert('You died!');
+    score = 0;
+    scoreSpan.innerText = score;  
+    keys = [];
+  }
   
-  if (enemyInRange()) createNewEnemy();
+  //* kill enemy
+  if (isShooting && playerEnemyCollision()) {
+    createNewEnemy();
+    score++;
+    scoreSpan.innerText = score;
+  }
 };
 
-const enemyInRange = () => {
+const playerEnemyCollision = () => {
   return (
     enemy.left < parseInt(player.style.left) + player.clientWidth &&
     enemy.left + 32 > parseInt(player.style.left) &&
@@ -99,7 +118,4 @@ const createNewEnemy = () => {
   const prevEnemy = document.querySelector('.enemy');
   if (prevEnemy) board.removeChild(prevEnemy);
   else enemy = new Enemy(board, player);
-
-  score++;
-  scoreSpan.innerText = score;
 }
