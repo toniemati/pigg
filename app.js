@@ -7,7 +7,7 @@ const scoreSpan = document.querySelector('.score');
 
 //* default center player position
 player.style.left = `${(board.clientWidth / 2) - (player.clientWidth / 2)}px`;
-player.style.top = `${(board.clientHeight /2) - (player.clientHeight / 2)}px`;
+player.style.top = `${(board.clientHeight / 2) - (player.clientHeight / 2)}px`;
 
 let score = 0;
 const pigStaySrc = './img/pig-stay.gif';
